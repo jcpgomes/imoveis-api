@@ -257,22 +257,26 @@ class PropertyStoreTest extends TestCase
         ]);
     }
 
-    public static function limitesDeQuartos(): array
+    public static function limitesDeContagem(): array
     {
         return [
-            'limite exato (255)' => [255, 201],
-            'um acima (256)'     => [256, 422],
+            'quartos: limite exato (255)' => ['bedrooms', 255, 201],
+            'quartos: um acima (256)'     => ['bedrooms', 256, 422],
+            'banheiros: limite exato (255)' => ['bathrooms', 255, 201],
+            'banheiros: um acima (256)'     => ['bathrooms', 256, 422],
+            'vagas: limite exato (255)' => ['garage_spaces', 255, 201],
+            'vagas: um acima (256)'     => ['garage_spaces', 256, 422],
         ];
     }
 
-    #[DataProvider('limitesDeQuartos')]
-    public function test_limite_de_quartos(int $bedrooms, int $statusEsperado): void
+    #[DataProvider('limitesDeContagem')]
+    public function test_limite_de_contagem(string $field, int $value, int $statusEsperado): void
     {
         Sanctum::actingAs(User::factory()->create());
 
         $response = $this->postJson('/api/properties', $this->validPayload([
             'external_code' => 'IMV-LIM',
-            'bedrooms'      => $bedrooms,
+            $field      => $value,
         ]));
 
         $response->assertStatus($statusEsperado);

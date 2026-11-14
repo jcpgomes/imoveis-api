@@ -28,9 +28,19 @@ The seeder creates the property types and a development user
 (`admin@example.com`, password from `SEED_ADMIN_PASSWORD` in your `.env`;
 the default in `.env.example` is `change-me-local-only`).
 
-If ports 80 or 3306 are already in use on your machine, set `APP_PORT`
-and `FORWARD_DB_PORT` in `.env`.
-If you set `APP_PORT`, use that port in the URLs (for example `http://localhost:8080`).
+## Troubleshooting
+
+**`port is already allocated` / `address already in use`**
+Another program (often a local MySQL, or another project using Sail) is using
+port 80 or 3306. Uncomment `APP_PORT` and `FORWARD_DB_PORT` in `.env`, pick free
+ports (for example `8080` and `3307`), then run:
+
+```bash
+./vendor/bin/sail down
+./vendor/bin/sail up -d
+```
+
+Use the new `APP_PORT` in the URLs (for example `http://localhost:8080`).
 
 ## Running the tests
 ```bash

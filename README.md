@@ -27,7 +27,6 @@ docker run --rm \
 The seeder creates the property types and a development user
 (`admin@example.com`, password from `SEED_ADMIN_PASSWORD` in your `.env`;
 the default in `.env.example` is `change-me-local-only`).
-## Troubleshooting
 
 The API is served at `http://localhost` (or `http://localhost:<APP_PORT>` if you
 changed the port). Port conflict? See [Troubleshooting](#troubleshooting).
@@ -35,7 +34,7 @@ changed the port). Port conflict? See [Troubleshooting](#troubleshooting).
 Quick check (should return a JSON with `token` and `nome`):
 ```bash
 # If you changed APP_PORT, use http://localhost:<APP_PORT> instead
-curl -X POST http://localhost:8080/api/login \
+curl -X POST http://localhost/api/login \
   -H "Accept: application/json" -H "Content-Type: application/json" \
   -d '{"email":"admin@example.com","password":"change-me-local-only"}'
 ```

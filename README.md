@@ -27,13 +27,25 @@ docker run --rm \
 The seeder creates the property types and a development user
 (`admin@example.com`, password from `SEED_ADMIN_PASSWORD` in your `.env`;
 the default in `.env.example` is `change-me-local-only`).
+## Troubleshooting
+
+The API is served at `http://localhost` (or `http://localhost:<APP_PORT>` if you
+changed the port). Port conflict? See [Troubleshooting](#troubleshooting).
+
+Quick check (should return a JSON with `token` and `nome`):
+```bash
+# If you changed APP_PORT, use http://localhost:<APP_PORT> instead
+curl -X POST http://localhost:8080/api/login \
+  -H "Accept: application/json" -H "Content-Type: application/json" \
+  -d '{"email":"admin@example.com","password":"change-me-local-only"}'
+```
 
 ## Troubleshooting
 
-**`port is already allocated` / `address already in use`**
-Another program (often a local MySQL, or another project using Sail) is using
-port 80 or 3306. Uncomment `APP_PORT` and `FORWARD_DB_PORT` in `.env`, pick free
-ports (for example `8080` and `3307`), then run:
+**`port is already allocated` / `address already in use`, or a 404 page from Apache/Nginx**
+Another program (a local MySQL, a web server such as Apache or Nginx, or another
+project using Sail) is using port 80 or 3306. Uncomment `APP_PORT` and
+`FORWARD_DB_PORT` in `.env`, pick free ports (for example `8080` and `3307`), then run:
 
 ```bash
 ./vendor/bin/sail down
@@ -41,6 +53,14 @@ ports (for example `8080` and `3307`), then run:
 ```
 
 Use the new `APP_PORT` in the URLs (for example `http://localhost:8080`).
+
+**Login returns "Credenciais inválidas" for the seeded user**
+The password is set when the seeder runs. If you changed `SEED_ADMIN_PASSWORD`
+afterwards, re-run:
+
+```bash
+./vendor/bin/sail artisan db:seed --class=UserSeeder
+```
 
 ## Running the tests
 ```bash
@@ -59,13 +79,6 @@ All routes are under `/api`. Send `Accept: application/json`.
 | POST | /properties | yes | Creates a property |
 
 Authenticated routes need `Authorization: Bearer <token>`.
-
-Example:
-```bash
-curl -X POST http://localhost/api/login \
-  -H "Accept: application/json" -H "Content-Type: application/json" \
-  -d '{"email":"admin@example.com","password":"change-me-local-only"}'
-```
 
 ## Design decisions
 

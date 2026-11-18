@@ -6,6 +6,7 @@ use App\Models\Property;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Enums\PropertyStatus;
 use App\Models\PropertyType;
+use App\Enums\PropertySource;
 /**
  * @extends Factory<Property>
  */
@@ -22,10 +23,16 @@ class PropertyFactory extends Factory
             'external_code' => fake()->unique()->numerify('IMV-#####'),
             'title' => fake()->sentence(4),
             'price' => fake()->randomFloat(2, 80000, 5000000),
-            'property_type_id' => PropertyType::query()->inRandomOrder()->value('id'),
+            'property_type_id' => fn () => PropertyType::query()->inRandomOrder()->value('id'),
             'city' => fake()->randomElement(['Rio de Janeiro', 'Niterói', 'Teresópolis', 'Petrópolis', 'Magé']),
             'state' => 'RJ',
-            'status' => fake()->randomElement(PropertyStatus::cases())
+            'status' => fake()->randomElement(PropertyStatus::cases()),
+            'source' => PropertySource::Import,
+            'neighborhood' => fake()->streetName(),
+            'address' => fake()->streetAddress(),
+            'bedrooms' => fake()->numberBetween(1, 5),
+            'bathrooms' => fake()->numberBetween(1, 5),
+            'created_by' => null,
         ];
     }
 }
